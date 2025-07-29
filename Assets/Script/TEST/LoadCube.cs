@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
@@ -12,26 +13,18 @@ namespace Script.TEST
             {
                 LoadCubeForAddressable();
             }
+
+            if (Input.GetKeyDown((KeyCode.A)))
+            {
+                Debug.Log("按下A");
+            }
         }
 
-        private void LoadCubeForAddressable()
+        public async void LoadCubeForAddressable()
         {
-           AsyncOperationHandle<GameObject> h = Addressables.LoadAssetAsync<GameObject>("MyCube");
-            h.Completed += OnLoadCubeCompleted;
-        }
-
-        private void OnLoadCubeCompleted(AsyncOperationHandle<GameObject> obj)
-        {
-            if (obj.Status == AsyncOperationStatus.Succeeded)
-            {
-                GameObject cube = obj.Result;
-                Instantiate(cube, Vector3.zero, Quaternion.identity);
-                Debug.Log("Cube loaded successfully.");
-            }
-            else
-            {
-                Debug.LogError("Failed to load cube: " + obj.OperationException);
-            }
+            var h = Addressables.LoadAssetAsync<GameObject>("MyCube");
+            await h.Task;
+            Instantiate(h.Result);
         }
     }
 }
