@@ -17,6 +17,10 @@ namespace Frame
             IsDone = false;
         }
 
+        /// <summary>
+        /// 得到资源加载的进度
+        /// </summary>
+        /// <returns></returns>
         public override float GetProgress()
         {
             return m_handle.PercentComplete;
@@ -26,8 +30,7 @@ namespace Frame
             // 如果资源没有被释放
             if (m_handle.IsValid())
             {
-                Addressables.ReleaseInstance(Result);
-                Addressables.Release(Result);
+                Addressables.ReleaseInstance(m_handle);
             }
         }
     }

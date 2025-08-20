@@ -29,7 +29,7 @@ namespace Frame
             // 如果资源没有被释放
             if (m_handle.IsValid())
             {
-                Addressables.Release(Result);
+                Addressables.Release(m_handle);
             }
         }
     }

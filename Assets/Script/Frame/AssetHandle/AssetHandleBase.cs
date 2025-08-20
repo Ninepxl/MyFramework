@@ -5,6 +5,10 @@
         Common = 0,
         GameObject = 2,
     }
+
+    /// <summary>
+    /// 资源处理器的基本操作 能够获取资源是否加载成功，资源的释放
+    /// </summary>
     public abstract class AssetHandleBase
     {
         public AssetType CurType;
