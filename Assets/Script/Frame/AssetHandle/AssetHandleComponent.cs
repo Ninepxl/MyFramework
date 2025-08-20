@@ -42,9 +42,12 @@ namespace Frame
         {
             if (cached && m_AssetHandleCache.ContainsKey(key))
             {
-                AssetHandle<T> cacheHandle = (AssetHandle<T>)m_AssetHandleCache[key];
-                callback?.Invoke(cacheHandle);
-                return cacheHandle;
+                if (m_AssetHandleCache[key] is AssetHandle<T> cacheHandle)
+                {
+                    callback?.Invoke(cacheHandle);
+                    return cacheHandle;
+                }
+                m_AssetHandleCache.Remove(key);
             }
             AsyncOperationHandle<T> h = Addressables.LoadAssetAsync<T>(key);
             AssetHandle<T> assetHandle = new AssetHandle<T>(h, key);
@@ -58,14 +61,18 @@ namespace Frame
                     {
                         m_AssetHandleCache[key] = assetHandle;
                     }
+                    else
+                    {
+                        assetHandle.Release();
+                    }
                 }
                 else
                 {
                     assetHandle.Success = false;
+                    assetHandle.Release();
                 }
                 assetHandle.IsDone = true;
                 callback.Invoke(assetHandle);
-                assetHandle.Release();
             };
             return assetHandle;
         }
