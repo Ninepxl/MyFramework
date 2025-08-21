@@ -61,10 +61,6 @@ namespace Frame
                     {
                         m_AssetHandleCache[key] = assetHandle;
                     }
-                    else
-                    {
-                        assetHandle.Release();
-                    }
                 }
                 else
                 {
@@ -76,7 +72,31 @@ namespace Frame
             };
             return assetHandle;
         }
-
+        public async UniTask<AssetHandle<T>> LoadAssetAsync<T>(object key, bool cached = false)
+        {
+            if (cached && m_AssetHandleCache.ContainsKey(key))
+            {
+                return m_AssetHandleCache[key] as AssetHandle<T>;
+            }
+            AsyncOperationHandle<T> h = Addressables.LoadAssetAsync<T>(key);
+            AssetHandle<T> assetHandle = new AssetHandle<T>(h, key);
+            await h.Task;
+            if (h.Status == AsyncOperationStatus.Succeeded)
+            {
+                assetHandle.Success = true;
+                assetHandle.Result = h.Result;
+                if (cached)
+                {
+                    m_AssetHandleCache[key] = assetHandle;
+                }
+            }
+            else
+            {
+                assetHandle.Success = false;
+                assetHandle.Release();
+            }
+            return assetHandle;
+        }
         /// <summary>
         /// 实例化GameObject
         /// </summary>
@@ -105,6 +125,24 @@ namespace Frame
                 assetHandle.IsDone = true;
                 callback?.Invoke(assetHandle);
             };
+            return assetHandle;
+        }
+
+        public async UniTask<AssetGameObjectHandle> InstantiateGoAsync(object key, Transform parent)
+        {
+            var h = Addressables.InstantiateAsync(key, parent);
+            AssetGameObjectHandle assetHandle = new AssetGameObjectHandle(h, key);
+            await h.Task;
+            if (h.Status == AsyncOperationStatus.Succeeded)
+            {
+                assetHandle.Success = true;
+                assetHandle.Result = h.Result;
+            }
+            else
+            {
+                assetHandle.Success = false;
+            }
+            assetHandle.IsDone = true;
             return assetHandle;
         }
 
