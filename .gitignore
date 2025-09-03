@@ -83,7 +83,7 @@ Assets/Textures/Atlas/AtlasPacker/Skill.spriteatlas
 Assets/Textures/Atlas/AtlasPacker/SkillCard.spriteatlas
 Assets/Wwise/Editor/ProjectData/AkWwiseProjectData.asset
 Assets/Scripts/LuaScript_Txt/*
-
+Assets/Plugins/Sirenix/
 # gtags
 GPATH
 GPATH.meta
