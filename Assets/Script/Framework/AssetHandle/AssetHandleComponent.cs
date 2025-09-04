@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -17,11 +16,27 @@ namespace Frame
         /// <summary>
         /// 所有资源加载器的缓存
         /// </summary>
+        public bool isDebug = false;
         private Dictionary<object, AssetHandleBase> m_AssetHandleCache = new Dictionary<object, AssetHandleBase>();
+        
+        #region DEBUG
+        // 监控不进行缓存的资源
+        private Dictionary<object, AssetHandleBase> m_TempAssetHandleCache;
+        // 监控实例化的GameObject
+        private Dictionary<object, AssetGameObjectHandle> m_InstantiatedHandles; 
+        public int GetLoadedAssetCount() => m_AssetHandleCache.Count;
+        public Dictionary<object, AssetHandleBase> GetAssetHandleCache() => m_AssetHandleCache;
+        #endregion
+
         protected override void Awake()
         {
             base.Awake();
-            m_AssetHandleCache.Clear();
+            m_AssetHandleCache = new Dictionary<object, AssetHandleBase>();
+            if (isDebug)
+            {
+                m_TempAssetHandleCache = new Dictionary<object, AssetHandleBase>();
+                m_InstantiatedHandles = new Dictionary<object, AssetGameObjectHandle>();
+            }
         }
         protected override void OnDestroy()
         {
@@ -34,7 +49,7 @@ namespace Frame
         /// 加载资源
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="key">z资源标签/param>
+        /// <param name="key">资源标签</param>
         /// <param name="callback">回调函数</param>
         /// <param name="cached">是否缓存这个资源加载器</param>
         /// <returns></returns>
@@ -47,6 +62,7 @@ namespace Frame
                     callback?.Invoke(cacheHandle);
                     return cacheHandle;
                 }
+                Debug.LogWarning($"资源缓存类型不匹配，将重新加载. Key: {key}, CachedType: {m_AssetHandleCache[key].GetType()}, RequestType: {typeof(AssetHandle<T>)}");
                 m_AssetHandleCache.Remove(key);
             }
             AsyncOperationHandle<T> h = Addressables.LoadAssetAsync<T>(key);
@@ -61,6 +77,11 @@ namespace Frame
                     {
                         m_AssetHandleCache[key] = assetHandle;
                     }
+                    else
+                    {
+                        if (isDebug && m_TempAssetHandleCache != null)
+                            m_TempAssetHandleCache[key] = assetHandle;
+                    }
                 }
                 else
                 {
@@ -68,7 +89,7 @@ namespace Frame
                     assetHandle.Release();
                 }
                 assetHandle.IsDone = true;
-                callback.Invoke(assetHandle);
+                callback?.Invoke(assetHandle);
             };
             return assetHandle;
         }
@@ -76,7 +97,13 @@ namespace Frame
         {
             if (cached && m_AssetHandleCache.ContainsKey(key))
             {
-                return m_AssetHandleCache[key] as AssetHandle<T>;
+                if (m_AssetHandleCache[key] is AssetHandle<T> cacheHandle)
+                {
+                    return cacheHandle;
+                }
+                
+                Debug.LogWarning($"资源缓存类型不匹配，将重新加载. Key: {key}, CachedType: {m_AssetHandleCache[key].GetType()}, RequestType: {typeof(AssetHandle<T>)}");
+                m_AssetHandleCache.Remove(key);
             }
             AsyncOperationHandle<T> h = Addressables.LoadAssetAsync<T>(key);
             AssetHandle<T> assetHandle = new AssetHandle<T>(h, key);
@@ -89,11 +116,17 @@ namespace Frame
                 {
                     m_AssetHandleCache[key] = assetHandle;
                 }
+                else
+                {
+                    if (isDebug && m_TempAssetHandleCache != null)
+                        m_TempAssetHandleCache[key] = assetHandle;
+                }
             }
             else
             {
                 assetHandle.Success = false;
-                assetHandle.Release();
+                // 异步加载失败时，不需要手动释放，Addressables内部会处理
+                // assetHandle.Release();
             }
             return assetHandle;
         }
@@ -117,6 +150,8 @@ namespace Frame
                 {
                     assetHandle.Success = true;
                     assetHandle.Result = handle.Result;
+                    if (isDebug && m_InstantiatedHandles != null)
+                        m_InstantiatedHandles[key] = assetHandle;
                 }
                 else
                 {
@@ -137,6 +172,8 @@ namespace Frame
             {
                 assetHandle.Success = true;
                 assetHandle.Result = h.Result;
+                if (isDebug && m_InstantiatedHandles != null)
+                    m_InstantiatedHandles[key] = assetHandle;
             }
             else
             {
@@ -150,12 +187,19 @@ namespace Frame
         /// 释放某个handler
         /// </summary>
         /// <param name="ah"></param>
-        /// <param name="cached"></param>
-        public void Release(AssetHandleBase ah, bool cached = false)
+        public void Release(AssetHandleBase ah)
         {
-            if (cached && ah.CurType == 0 && m_AssetHandleCache.ContainsKey(ah.Key))
+            if (ah == null) return;
+
+            // 如果有缓存，还要删除缓存的数据
+            if (m_AssetHandleCache.ContainsKey(ah.Key))
             {
                 m_AssetHandleCache.Remove(ah.Key);
+            }
+            if (isDebug)
+            {
+                m_TempAssetHandleCache?.Remove(ah.Key);
+                m_InstantiatedHandles?.Remove(ah.Key);
             }
 
             ah.Release();
@@ -164,13 +208,28 @@ namespace Frame
         /// <summary>
         /// 释放所有加载进内存的数据
         /// </summary>
-        private void ClearAllCache()
+        public void ClearAllCache()
         {
             foreach (var handle in m_AssetHandleCache)
             {
                 handle.Value.Release();
             }
             m_AssetHandleCache.Clear();
+
+            if (isDebug)
+            {
+                if (m_TempAssetHandleCache != null)
+                {
+                    foreach (var handle in m_TempAssetHandleCache) handle.Value.Release();
+                    m_TempAssetHandleCache.Clear();
+                }
+
+                if (m_InstantiatedHandles != null)
+                {
+                    foreach (var handle in m_InstantiatedHandles) handle.Value.Release();
+                    m_InstantiatedHandles.Clear();
+                }
+            }
         }
 
         /// <summary>
