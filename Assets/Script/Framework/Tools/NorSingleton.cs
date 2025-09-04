@@ -5,18 +5,8 @@ namespace Frame
 {
     public class NorSingleton<T> where T : new()
     {
-        private NorSingleton() { }
-        private static T _Instance;
-        public static T Instance
-        {
-            get
-            {
-                if (_Instance == null)
-                {
-                    _Instance = new T();
-                }
-                return _Instance;
-            }
-        }
+        private static readonly Lazy<T> _Instance = new Lazy<T>(() => new T());
+
+        public static T Instance => _Instance.Value;
     }
 }
