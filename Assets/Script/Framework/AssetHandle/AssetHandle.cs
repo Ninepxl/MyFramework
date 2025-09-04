@@ -1,5 +1,6 @@
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
+using UnityEngine;
 
 namespace Frame
 {
@@ -13,7 +14,14 @@ namespace Frame
         public T Result;
         public AssetHandle(AsyncOperationHandle<T> handle, object key)
         {
-            CurType = AssetType.Common;
+            if (typeof(T) == typeof(GameObject))
+            {
+                CurType = AssetType.GameObject;
+            }
+            else
+            {
+                CurType = AssetType.Common;
+            }
             m_handle = handle;
             Key = key;
             Success = false;

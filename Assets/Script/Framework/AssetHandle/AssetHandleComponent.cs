@@ -4,7 +4,6 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
-using UnityEngine.ResourceManagement.ResourceLocations;
 
 namespace Frame
 {
@@ -18,14 +17,19 @@ namespace Frame
         /// </summary>
         public bool isDebug = false;
         private Dictionary<object, AssetHandleBase> m_AssetHandleCache = new Dictionary<object, AssetHandleBase>();
-        
+
         #region DEBUG
         // 监控不进行缓存的资源
         private Dictionary<object, AssetHandleBase> m_TempAssetHandleCache;
         // 监控实例化的GameObject
-        private Dictionary<object, AssetGameObjectHandle> m_InstantiatedHandles; 
+        private Dictionary<object, AssetGameObjectHandle> m_InstantiatedHandles;
         public int GetLoadedAssetCount() => m_AssetHandleCache.Count;
         public Dictionary<object, AssetHandleBase> GetAssetHandleCache() => m_AssetHandleCache;
+        public int GetTempAssetHandleCount() => m_TempAssetHandleCache.Count;
+        public Dictionary<object, AssetHandleBase> GetTempAssetHandleCache() => m_TempAssetHandleCache;
+
+        public int GetInstantiatedHandleCount() => m_InstantiatedHandles.Count;
+        public Dictionary<object, AssetGameObjectHandle> GetInstantiatedHandles() => m_InstantiatedHandles;
         #endregion
 
         protected override void Awake()
@@ -101,7 +105,7 @@ namespace Frame
                 {
                     return cacheHandle;
                 }
-                
+
                 Debug.LogWarning($"资源缓存类型不匹配，将重新加载. Key: {key}, CachedType: {m_AssetHandleCache[key].GetType()}, RequestType: {typeof(AssetHandle<T>)}");
                 m_AssetHandleCache.Remove(key);
             }

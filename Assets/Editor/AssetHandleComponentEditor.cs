@@ -31,6 +31,11 @@ namespace Frame
             }
 
             if (target_component == null) return;
+            if (!target_component.isDebug)
+            {
+                EditorGUILayout.HelpBox("未开启Debug模式", MessageType.Info);
+                return;
+            }
 
             // 添加分隔线
             EditorGUILayout.Space(10);
@@ -47,18 +52,31 @@ namespace Frame
             EditorGUILayout.Space(5);
 
             // 显示资源总数
-            int loadedCount = target_component.GetLoadedAssetCount();
+            int cachedCount = target_component.GetLoadedAssetCount();
+            int tempCount = target_component.GetTempAssetHandleCount();
+            int instantiatedCount = target_component.GetInstantiatedHandleCount();
+
             EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.LabelField("已加载资源总数:", EditorStyles.boldLabel, GUILayout.Width(120));
-            EditorGUILayout.LabelField(loadedCount.ToString(), GUILayout.Width(50));
+            EditorGUILayout.LabelField("缓存资源数:", EditorStyles.boldLabel, GUILayout.Width(120));
+            EditorGUILayout.LabelField(cachedCount.ToString(), GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("临时资源数:", EditorStyles.boldLabel, GUILayout.Width(120));
+            EditorGUILayout.LabelField(tempCount.ToString(), GUILayout.Width(50));
+            EditorGUILayout.EndHorizontal();
+
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("实例化对象数:", EditorStyles.boldLabel, GUILayout.Width(120));
+            EditorGUILayout.LabelField(instantiatedCount.ToString(), GUILayout.Width(50));
             EditorGUILayout.EndHorizontal();
 
             EditorGUILayout.Space(5);
 
             // 显示资源列表
-            if (loadedCount > 0)
+            if (cachedCount > 0)
             {
-                EditorGUILayout.LabelField("已加载资源列表:", EditorStyles.boldLabel);
+                EditorGUILayout.LabelField("缓存资源列表 (Cached):", EditorStyles.boldLabel);
 
                 // 表格标题
                 EditorGUILayout.BeginHorizontal();
@@ -73,8 +91,8 @@ namespace Frame
                 EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
 
                 // 滚动视图
-                var scrollViewHeight = Mathf.Min(loadedCount * 20 + 10, 200);
-                scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, GUILayout.Height(scrollViewHeight));
+                var scrollViewHeight = Mathf.Min(cachedCount * 20 + 10, 200);
+                cachedScrollPosition = EditorGUILayout.BeginScrollView(cachedScrollPosition, GUILayout.Height(scrollViewHeight));
 
                 var allAssets = target_component.GetAssetHandleCache();
                 foreach (var asset in allAssets)
@@ -86,10 +104,72 @@ namespace Frame
             }
             else
             {
-                EditorGUILayout.HelpBox("当前没有加载任何资源到缓存中", MessageType.Info);
+                // 当前没有缓存资源时不显示列表
             }
 
             EditorGUILayout.Space(10);
+
+            // 显示临时资源列表
+            if (tempCount > 0)
+            {
+                EditorGUILayout.LabelField("临时资源列表 (Non-Cached):", EditorStyles.boldLabel);
+
+                // 表格标题
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("资源Key", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(150));
+                EditorGUILayout.LabelField("类型", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(80));
+                EditorGUILayout.LabelField("成功", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(50));
+                EditorGUILayout.LabelField("完成", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(50));
+                EditorGUILayout.LabelField("进度", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(100));
+                EditorGUILayout.EndHorizontal();
+
+                // 分隔线
+                EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+                // 滚动视图
+                var scrollViewHeight = Mathf.Min(tempCount * 20 + 10, 200);
+                tempScrollPosition = EditorGUILayout.BeginScrollView(tempScrollPosition, GUILayout.Height(scrollViewHeight));
+
+                var allAssets = target_component.GetTempAssetHandleCache();
+                foreach (var asset in allAssets)
+                {
+                    DrawAssetRow(asset.Key, asset.Value);
+                }
+
+                EditorGUILayout.EndScrollView();
+            }
+
+            EditorGUILayout.Space(10);
+
+            // 显示实例化对象列表
+            if (instantiatedCount > 0)
+            {
+                EditorGUILayout.LabelField("实例化对象列表 (Instantiated):", EditorStyles.boldLabel);
+
+                // 表格标题
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField("资源Key", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(150));
+                EditorGUILayout.LabelField("类型", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(80));
+                EditorGUILayout.LabelField("成功", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(50));
+                EditorGUILayout.LabelField("完成", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(50));
+                EditorGUILayout.LabelField("进度", EditorStyles.centeredGreyMiniLabel, GUILayout.Width(100));
+                EditorGUILayout.EndHorizontal();
+
+                // 分隔线
+                EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+                // 滚动视图
+                var scrollViewHeight = Mathf.Min(instantiatedCount * 20 + 10, 200);
+                instantiatedScrollPosition = EditorGUILayout.BeginScrollView(instantiatedScrollPosition, GUILayout.Height(scrollViewHeight));
+
+                var allAssets = target_component.GetInstantiatedHandles();
+                foreach (var asset in allAssets)
+                {
+                    DrawAssetRow(asset.Key, asset.Value);
+                }
+
+                EditorGUILayout.EndScrollView();
+            }
 
             // 操作按钮
             EditorGUILayout.BeginHorizontal();
@@ -98,7 +178,7 @@ namespace Frame
             if (GUILayout.Button("刷新信息", GUILayout.Height(25)))
             {
                 Repaint(); // 强制重绘Inspector
-                Debug.Log($"当前已加载资源数量: {loadedCount}");
+                Debug.Log($"缓存资源: {cachedCount}, 临时资源: {tempCount}, 实例化对象: {instantiatedCount}");
             }
 
             // 清理缓存按钮
@@ -123,7 +203,9 @@ namespace Frame
             }
         }
 
-        private Vector2 scrollPosition;
+        private Vector2 cachedScrollPosition;
+        private Vector2 tempScrollPosition;
+        private Vector2 instantiatedScrollPosition;
 
         private void DrawAssetRow(object key, AssetHandleBase assetHandle)
         {
