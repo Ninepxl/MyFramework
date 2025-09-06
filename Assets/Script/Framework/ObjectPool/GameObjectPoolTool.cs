@@ -13,6 +13,7 @@ namespace Frame
         public static void Init()
         {
             m_Pools.Clear();
+            m_InstancePools.Clear();
         }
 
         public static GameObject Rent(GameObject go)
@@ -35,7 +36,7 @@ namespace Frame
                     break;
                 }
             }
-            PoolCallbackHelper.InvokeOnRent(go);
+            PoolCallbackHelper.InvokeOnRent(obj);
             m_InstancePools.Add(obj, pool);
             return obj;
         }
@@ -150,11 +151,12 @@ namespace Frame
             if (!m_InstancePools.TryGetValue(instance, out var pool))
             {
                 UnityEngine.Object.Destroy(instance);
+                return;
             }
+            PoolCallbackHelper.InvokeOnReturn(instance);
             instance.SetActive(false);
             // 归还物体到对象池中
             pool.Push(instance);
-            PoolCallbackHelper.InvokeOnReturn(instance);
             m_InstancePools.Remove(instance);
         }
 
@@ -183,7 +185,7 @@ namespace Frame
         /// <summary>
         /// 清空所有对象池
         /// </summary>
-        public void Dispose()
+        public static void Dispose()
         {
             foreach (var goStack in m_Pools.Values)
             {
@@ -192,6 +194,8 @@ namespace Frame
                     UnityEngine.Object.Destroy(go);
                 }
             }
+            m_Pools.Clear();
+            m_InstancePools.Clear();
         }
 
         /// <summary>
