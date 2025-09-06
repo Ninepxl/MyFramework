@@ -6,17 +6,16 @@ namespace Frame
 {
     public class GameObjectPoolTool
     {
-        private static readonly Dictionary<GameObject, Stack<GameObject>> m_Pools = new();
-        private static readonly Dictionary<GameObject, Stack<GameObject>> m_InstancePools = new();
+        private readonly Dictionary<GameObject, Stack<GameObject>> m_Pools = new();
+        private readonly Dictionary<GameObject, Stack<GameObject>> m_InstancePools = new();
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        public static void Init()
+        public void Init()
         {
             m_Pools.Clear();
             m_InstancePools.Clear();
         }
 
-        public static GameObject Rent(GameObject go)
+        public GameObject Rent(GameObject go)
         {
             if (go == null) throw new ArgumentNullException(nameof(go));
             var pool = GetOrCreatePool(go);
@@ -40,7 +39,7 @@ namespace Frame
             m_InstancePools.Add(obj, pool);
             return obj;
         }
-        public static GameObject Rent(GameObject original, Transform parent)
+        public GameObject Rent(GameObject original, Transform parent)
         {
             if (original == null) throw new ArgumentNullException(nameof(original));
 
@@ -69,7 +68,7 @@ namespace Frame
             return obj;
         }
 
-        public static GameObject Rent(GameObject original, Vector3 position, Quaternion rotation)
+        public GameObject Rent(GameObject original, Vector3 position, Quaternion rotation)
         {
             if (original == null) throw new ArgumentNullException(nameof(original));
 
@@ -98,7 +97,7 @@ namespace Frame
             return obj;
         }
 
-        public static GameObject Rent(GameObject original, Vector3 position, Quaternion rotation, Transform parent)
+        public GameObject Rent(GameObject original, Vector3 position, Quaternion rotation, Transform parent)
         {
             if (original == null) throw new ArgumentNullException(nameof(original));
 
@@ -127,25 +126,25 @@ namespace Frame
 
             return obj;
         }
-        public static TComponent Rent<TComponent>(TComponent original) where TComponent : Component
+        public TComponent Rent<TComponent>(TComponent original) where TComponent : Component
         {
             return Rent(original.gameObject).GetComponent<TComponent>();
         }
-        public static TComponent Rent<TComponent>(TComponent original, Vector3 position, Quaternion rotation, Transform parent) where TComponent : Component
+        public TComponent Rent<TComponent>(TComponent original, Vector3 position, Quaternion rotation, Transform parent) where TComponent : Component
         {
             return Rent(original.gameObject, position, rotation, parent).GetComponent<TComponent>();
         }
 
-        public static TComponent Rent<TComponent>(TComponent original, Vector3 position, Quaternion rotation) where TComponent : Component
+        public TComponent Rent<TComponent>(TComponent original, Vector3 position, Quaternion rotation) where TComponent : Component
         {
             return Rent(original.gameObject, position, rotation).GetComponent<TComponent>();
         }
 
-        public static TComponent Rent<TComponent>(TComponent original, Transform parent) where TComponent : Component
+        public TComponent Rent<TComponent>(TComponent original, Transform parent) where TComponent : Component
         {
             return Rent(original.gameObject, parent).GetComponent<TComponent>();
         }
-        public static void Return(GameObject instance)
+        public void Return(GameObject instance)
         {
             if (instance == null) throw new ArgumentNullException(nameof(instance));
             if (!m_InstancePools.TryGetValue(instance, out var pool))
@@ -166,7 +165,7 @@ namespace Frame
         /// <param name="original"></param>
         /// <param name="count"></param>
         /// <exception cref="ArgumentNullException"></exception>
-        public static void Prewarm(GameObject original, int count)
+        public void Prewarm(GameObject original, int count)
         {
             if (original == null) throw new ArgumentNullException(nameof(original));
 
@@ -185,7 +184,7 @@ namespace Frame
         /// <summary>
         /// 清空所有对象池
         /// </summary>
-        public static void Dispose()
+        public void Dispose()
         {
             foreach (var goStack in m_Pools.Values)
             {
@@ -203,7 +202,7 @@ namespace Frame
         /// </summary>
         /// <param name="go"></param>
         /// <returns></returns>
-        private static Stack<GameObject> GetOrCreatePool(GameObject go)
+        private Stack<GameObject> GetOrCreatePool(GameObject go)
         {
             if (!m_Pools.TryGetValue(go, out var pool))
             {

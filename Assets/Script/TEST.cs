@@ -8,18 +8,19 @@ using UnityEngine;
 public class TEST : MonoBehaviour
 {
     private Frame.AssetHandleComponent assetHandleComponent;
-    private bool isInitAsset = false;
+    private GameObjectPoolComponent poolComponent;
     private GameObject cubePerfab;
     private void Start()
     {
         assetHandleComponent = Frame.GameEntry.GetComponent<Frame.AssetHandleComponent>();
-        if (assetHandleComponent == null)
+        poolComponent = GameEntry.GetComponent<GameObjectPoolComponent>();
+        if (assetHandleComponent == null || poolComponent == null)
         {
-            Debug.Log("资源加载器加载失败");
+            Debug.Log("框架加载失败");
         }
         else
         {
-            Debug.Log("资源加载器加载成功");
+            Debug.Log("框架加载成功");
             InitAsset();
         }
     }
@@ -30,7 +31,6 @@ public class TEST : MonoBehaviour
     private async void InitAsset()
     {
         await assetHandleComponent.StartupCoroutine();
-        isInitAsset = true;
     }
 
     /// <summary>
@@ -53,14 +53,18 @@ public class TEST : MonoBehaviour
     /// </summary>
     /// <param name="count"></param>
     [Button("PoolTESTRent")]
-    private async UniTask PoolTESTRent()
+    private void PoolTESTRent()
     {
-        GameObject cubeInstacne = GameObjectPoolTool.Rent(cubePerfab, transform);
-        _ = PoolTESTReturn(cubeInstacne);
+        if (cubePerfab != null)
+        {
+            GameObject cubeInstacne = poolComponent.Rent(cubePerfab, transform);
+            _ = PoolTESTReturn(cubeInstacne);
+        }
     }
+
     private async UniTask PoolTESTReturn(GameObject instance)
     {
-        await UniTask.Delay(10000);
-        GameObjectPoolTool.Return(instance);
+        await UniTask.Delay(2000);
+        poolComponent.Return(instance);
     }
 }
