@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Frame;
 using Sirenix.OdinInspector;
@@ -7,12 +5,14 @@ using UnityEngine;
 
 public class TEST : MonoBehaviour
 {
-    private Frame.AssetHandleComponent assetHandleComponent;
+    public delegate void FT();
+    public event FT f;
+    private AssetHandleComponent assetHandleComponent;
     private GameObjectPoolComponent poolComponent;
     private GameObject cubePerfab;
     private void Start()
     {
-        assetHandleComponent = Frame.GameEntry.GetComponent<Frame.AssetHandleComponent>();
+        assetHandleComponent = GameEntry.GetComponent<Frame.AssetHandleComponent>();
         poolComponent = GameEntry.GetComponent<GameObjectPoolComponent>();
         if (assetHandleComponent == null || poolComponent == null)
         {
@@ -21,6 +21,8 @@ public class TEST : MonoBehaviour
         else
         {
             Debug.Log("框架加载成功");
+            f = InitAsset; // 等于某一函数
+            f.Invoke();
             InitAsset();
         }
     }

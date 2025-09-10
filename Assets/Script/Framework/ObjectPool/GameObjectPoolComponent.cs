@@ -1,10 +1,13 @@
+using System;
 using UnityEngine;
 
 namespace Frame
 {
     public class GameObjectPoolComponent : GameComponent
     {
+        // 被观察 可以通知 观察者 
         private readonly GameObjectPoolTool m_Pool = new();
+        
         protected override void Awake()
         {
             base.Awake();
