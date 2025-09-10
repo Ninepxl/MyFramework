@@ -1,10 +1,13 @@
 using System;
 using System.Runtime.CompilerServices;
 
-public static class MessageSubscriberExtensions
+namespace Frame
 {
-    public static IDisposable Subscribe<T>(this IMessageSubscriber<T> subscriber, Action<T> handler)
+    public static class MessageSubscriberExtensions
     {
-        return null;
+        public static IDisposable Subscribe<T>(this IMessageSubscriber<T> subscriber, Action<T> handler)
+        {
+            return subscriber.Subscribe(new AnonymousMessageHandler<T>(handler));
+        }
     }
 }

@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class TEST : MonoBehaviour
 {
-    public delegate void FT();
-    public event FT f;
     private AssetHandleComponent assetHandleComponent;
     private GameObjectPoolComponent poolComponent;
     private GameObject cubePerfab;
@@ -21,16 +19,14 @@ public class TEST : MonoBehaviour
         else
         {
             Debug.Log("框架加载成功");
-            f = InitAsset; // 等于某一函数
-            f.Invoke();
-            InitAsset();
+            _ = InitAsset();
         }
     }
 
     /// <summary>
     /// 初始化资源加载器
     /// </summary>
-    private async void InitAsset()
+    private async UniTask InitAsset()
     {
         await assetHandleComponent.StartupCoroutine();
     }
@@ -38,7 +34,7 @@ public class TEST : MonoBehaviour
     /// <summary>
     /// 加载cubePerfab
     /// </summary>
-    [Button("LoadCubePerfab")]
+    [Button("加载方块预制体")]
     private void LoadCubePerfab()
     {
         assetHandleComponent.LoadAsset<GameObject>("MyCube", handle =>
@@ -54,7 +50,7 @@ public class TEST : MonoBehaviour
     /// 对象池获取对象测试
     /// </summary>
     /// <param name="count"></param>
-    [Button("PoolTESTRent")]
+    [Button("对象池测试")]
     private void PoolTESTRent()
     {
         if (cubePerfab != null)

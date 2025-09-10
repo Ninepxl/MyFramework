@@ -1,6 +1,7 @@
 using System;
+using Frame;
 
 public interface IMessageSubscriber<T>  
 {
-    IDisposable Subscribe(Action<T> handler);
+    IDisposable Subscribe(MessageHandler<T> handler);
 }

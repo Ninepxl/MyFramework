@@ -10,7 +10,12 @@ namespace Frame
         public MessageHandlerNode<T> Root => root;
         public bool IsDisposed => isDisposed;
         private ulong version = 0;
-        object gate = new object(); // 锁
+        object gate;
+        public MessageHandlerList(object gate)
+        {
+            this.gate = gate;
+            isDisposed = false;
+        }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void Add(MessageHandlerNode<T> node)
@@ -81,10 +86,6 @@ namespace Frame
                         root!.PreviousNode = node.PreviousNode;
                     }
                 }
-                
-                node.PreviousNode = null;
-                node.NextNode = null;
-                node.Parent = null;
             }
         }
 
