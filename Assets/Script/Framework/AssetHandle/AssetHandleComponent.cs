@@ -237,10 +237,10 @@ namespace Frame
         }
 
         /// <summary>
-        /// AssetHandleComponent 初始化
+        /// AssetHandleComponent 初始化 
         /// </summary>
         /// <returns></returns>
-        public async UniTask StartupCoroutine()
+        public async UniTask InitializeAsync()
         {
             Debug.Log("Addressables 初始化中...");
             AsyncOperationHandle initializeHandle = Addressables.InitializeAsync(false);

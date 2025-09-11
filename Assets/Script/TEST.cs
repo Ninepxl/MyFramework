@@ -1,35 +1,14 @@
 using Cysharp.Threading.Tasks;
-using Frame;
+using GameDemo;
 using Sirenix.OdinInspector;
 using UnityEngine;
-
+public struct MessageTestEvent
+{
+    public int value;
+}
 public class TEST : MonoBehaviour
 {
-    private AssetHandleComponent assetHandleComponent;
-    private GameObjectPoolComponent poolComponent;
     private GameObject cubePerfab;
-    private void Start()
-    {
-        assetHandleComponent = GameEntry.GetComponent<Frame.AssetHandleComponent>();
-        poolComponent = GameEntry.GetComponent<GameObjectPoolComponent>();
-        if (assetHandleComponent == null || poolComponent == null)
-        {
-            Debug.Log("框架加载失败");
-        }
-        else
-        {
-            Debug.Log("框架加载成功");
-            _ = InitAsset();
-        }
-    }
-
-    /// <summary>
-    /// 初始化资源加载器
-    /// </summary>
-    private async UniTask InitAsset()
-    {
-        await assetHandleComponent.StartupCoroutine();
-    }
 
     /// <summary>
     /// 加载cubePerfab
@@ -37,7 +16,7 @@ public class TEST : MonoBehaviour
     [Button("加载方块预制体")]
     private void LoadCubePerfab()
     {
-        assetHandleComponent.LoadAsset<GameObject>("MyCube", handle =>
+        GameEntry.Asset.LoadAsset<GameObject>("MyCube", handle =>
         {
             if (handle.Success)
             {
@@ -55,7 +34,7 @@ public class TEST : MonoBehaviour
     {
         if (cubePerfab != null)
         {
-            GameObject cubeInstacne = poolComponent.Rent(cubePerfab, transform);
+            GameObject cubeInstacne = GameEntry.GameObjectPool.Rent(cubePerfab, transform);
             _ = PoolTESTReturn(cubeInstacne);
         }
     }
@@ -63,6 +42,21 @@ public class TEST : MonoBehaviour
     private async UniTask PoolTESTReturn(GameObject instance)
     {
         await UniTask.Delay(2000);
-        poolComponent.Return(instance);
+        GameEntry.GameObjectPool.Return(instance);
+    }
+    [Button("发布消息")]
+    private void MessageTESTPublish()
+    {
+        Debug.Log("发布消息");
+        GameEntry.Message.Publish(new MessageTestEvent { value = 1 });
+    }
+    [Button("订阅消息")]
+    private void MessageTESTSubscribe()
+    {
+        Debug.Log("订阅消息");
+        GameEntry.Message.Subscribe<MessageTestEvent>((e) =>
+        {
+            Debug.Log(e.value);
+        });
     }
 }
