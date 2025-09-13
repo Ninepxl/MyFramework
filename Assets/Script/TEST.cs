@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameDemo;
 using Sirenix.OdinInspector;
@@ -9,6 +11,7 @@ public struct MessageTestEvent
 public class TEST : MonoBehaviour
 {
     private GameObject cubePerfab;
+    List<IDisposable> handlers = new List<IDisposable>();
 
     /// <summary>
     /// 加载cubePerfab
@@ -54,9 +57,19 @@ public class TEST : MonoBehaviour
     private void MessageTESTSubscribe()
     {
         Debug.Log("订阅消息");
-        GameEntry.Message.Subscribe<MessageTestEvent>((e) =>
+        var handler = GameEntry.Message.Subscribe<MessageTestEvent>((e) =>
         {
             Debug.Log(e.value);
         });
+        handlers.Add(handler);
+    }
+    [Button("取消订阅消息")]
+    private void MessageTESTUnsubscribe()
+    {
+        Debug.Log("取消订阅消息");
+        foreach (var handler in handlers)
+        {
+            handler.Dispose();
+        }
     }
 }

@@ -19,13 +19,13 @@ namespace Frame
         {
             GetOrCreateBoker<T>().Publish(message);
         }
-        public void Subscribe<T>(MessageHandler<T> handler)
+        public IDisposable Subscribe<T>(MessageHandler<T> handler)
         {
-            GetOrCreateBoker<T>().Subscribe(handler);
+            return GetOrCreateBoker<T>().Subscribe(handler);
         }
-        public void Subscribe<T>(Action<T> handler)
+        public IDisposable Subscribe<T>(Action<T> handler)
         {
-            GetOrCreateBoker<T>().Subscribe(handler);
+            return GetOrCreateBoker<T>().Subscribe(handler);
         }
         protected override void Awake()
         {
