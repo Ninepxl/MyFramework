@@ -1,6 +1,6 @@
-using Frame;
+// using Frame;
 
-public class PlayerViewModel
-{
-    public BindableProperty<int> hp { get; } = new();
-}
+// public class PlayerViewModel
+// {
+//     public BindableProperty<int> hp { get; } = new();
+// }
