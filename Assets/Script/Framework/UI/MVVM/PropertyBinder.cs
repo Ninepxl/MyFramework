@@ -11,10 +11,7 @@ namespace Frame
     /// <typeparam name="TViewModel">ViewModel 的具体类型</typeparam>
     public class PropertyBinder<TViewModel> : IDisposable where TViewModel : class
     {
-        // 保存“如何进行绑定”的操作列表
         private readonly List<Action<TViewModel>> _bindingActions = new();
-        
-        // 保存当前激活的订阅，用于解绑
         private readonly List<IDisposable> _activeSubscriptions = new();
 
         /// <summary>
@@ -24,7 +21,6 @@ namespace Frame
         /// <param name="valueChangedHandler">属性值变化时的回调</param>
         public void Add<TValue>(string propertyName, Action<TValue, TValue> valueChangedHandler)
         {
-            // 关键改动1：使用 GetProperty 来查找公共属性，而不是字段。
             var propertyInfo = typeof(TViewModel).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
 
             if (propertyInfo == null)
@@ -37,7 +33,6 @@ namespace Frame
                 var value = propertyInfo.GetValue(viewModel);
                 if (value is BindableProperty<TValue> property)
                 {
-                    // 关键改动2：使用 Subscribe(..., true) 来立即触发一次回调，以设置UI初始状态。
                     var subscription = property.Subscribe(valueChangedHandler, true);
                     _activeSubscriptions.Add(subscription);
                 }
@@ -53,7 +48,6 @@ namespace Frame
         /// </summary>
         public void Bind(TViewModel viewModel)
         {
-            // 关键改动3：每次绑定前，先清理掉旧的订阅，防止内存泄漏和重复绑定。
             Unbind();
 
             if (viewModel == null) return;
@@ -76,10 +70,6 @@ namespace Frame
             }
             _activeSubscriptions.Clear();
         }
-
-        /// <summary>
-        /// 彻底清理 Binder，释放所有资源。
-        /// </summary>
         public void Dispose()
         {
             Unbind();
