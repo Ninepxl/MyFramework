@@ -1,4 +1,4 @@
-using System;
+using System.Collections.Generic;
 using Frame;
 using UnityEngine;
 using UnityEngine.Events;
@@ -10,23 +10,14 @@ namespace UITEST
     /// </summary>
     public class PalyerViewModel
     {
-        // 有多个属性 
-        // 使用自定义特性行吗
-        public BindableProperty<string> Lv;
-        public BindableProperty<UnityAction> onLevelUp;
-        public BindableProperty<UnityAction> onLevelDown;
+        public Dictionary<string, IBindableProperty> addBtn;
+        // 再执行ViewModel
         public PalyerViewModel()
         {
-            // 初始化属性
-            Lv = new BindableProperty<string>("");
-            onLevelUp = new BindableProperty<UnityAction>(() =>
+            addBtn = UIUtil.BindButton(() =>
             {
-                Lv.Value = (int.Parse(Lv.Value) + 1).ToString();
-            });
-            onLevelDown = new BindableProperty<UnityAction>(() =>
-            {
+                Debug.Log("Click Add Btn");
             });
         }
-
     }
 }

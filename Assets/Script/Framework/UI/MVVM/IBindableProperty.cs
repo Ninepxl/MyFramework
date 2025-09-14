@@ -2,11 +2,7 @@ using System;
 
 namespace Frame
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="TVlaue">绑定数据的类型</typeparam>
-    public interface IBindableProperty<TVlaue>
+    public interface IBindableProperty
     {
         Type PropertyType { get; }
     }
@@ -23,7 +19,7 @@ namespace Frame
         }
     }
 
-    public class BindableProperty<TValue> : IBindableProperty<TValue>, IDisposable
+    public class BindableProperty<TValue> : IBindableProperty, IDisposable
     {
         private TValue m_value;
         private readonly MessageBroker<ValueChangedEventArgs<TValue>> m_messageBroker = new();

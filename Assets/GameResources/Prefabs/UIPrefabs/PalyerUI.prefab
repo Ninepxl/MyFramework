@@ -627,8 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad831ce9e5c61734fb27ed824dfe2e51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LvText: {fileID: 7760878622418294290}
-  UpBtn: {fileID: 4419003197068699935}
+  addBtn: {fileID: 4419003197068699935}
 --- !u!1 &8697661866353264062
 GameObject:
   m_ObjectHideFlags: 0

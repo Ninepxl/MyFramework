@@ -1,8 +1,9 @@
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Frame.Editor;
+using Frame;
+using UnityEngine.Events;
+using System;
 namespace UITEST
 {
     /// <summary>
@@ -10,30 +11,25 @@ namespace UITEST
     /// </summary>
     public class PalyerView : MonoBehaviour
     {
-        public Dictionary<string, string> pathList = new()
-        {
-            {"AddBtn", "Panel/AddBtn"},
-            {"SubBtn", "Panel/SubBtn"},
-        };
-        private PalyerViewModel ViewModel;
-        [SerializeField, FindUIComponent("LV")]
-        private TextMeshProUGUI LvText;
 
         [SerializeField, FindUIComponent("AddBtn")]
-        private Button UpBtn;
+        private Button addBtn;
+        private PropertyBinder binder;
+        private PalyerViewModel viewModel;
+        // 先执行View
         private void Awake()
         {
-            ViewModel = new();
-            // 手动绑定
-            ViewModel.Lv.Subscribe((oldVal, newVal) =>
+            binder = new();
+            viewModel = new();
+            binder.Add(viewModel.addBtn["active"] as BindableProperty<bool>, (oldVal, newVal) =>
             {
-                LvText.text = newVal;
+                addBtn.gameObject.SetActive(newVal);
             });
-            ViewModel.onLevelUp.Subscribe((oldHandler, newHandler) =>
+            binder.Add(viewModel.addBtn["onClick"] as BindableProperty<Action>, (oldVal, newVal) =>
             {
-                if (oldHandler != null)
-                    UpBtn.onClick.RemoveListener(oldHandler);
-                UpBtn.onClick.AddListener(newHandler);
+                if (oldVal != null)
+                    addBtn.onClick.RemoveListener(oldVal.Invoke);
+                addBtn.onClick.AddListener(newVal.Invoke);
             }, true);
         }
     }
