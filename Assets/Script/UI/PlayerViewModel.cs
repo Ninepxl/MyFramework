@@ -28,7 +28,6 @@ namespace Game.ViewModels
 
         public PlayerViewModel()
         {
-            // 1. 将Model的数据“翻译”为View可用的格式
             _model.Hp.Subscribe((oldValue, newValue) =>
             {
                 HpText.Text.Value = $"{newValue}";
