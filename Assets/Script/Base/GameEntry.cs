@@ -12,7 +12,7 @@ namespace GameDemo
 
         private void Start()
         {
-            Asset = Frame.GameEntry.GetComponent<Frame.AssetHandleComponent>();
+            Asset = Frame.GameEntry.GetComponent<AssetHandleComponent>();
             GameObjectPool = Frame.GameEntry.GetComponent<GameObjectPoolComponent>();
             Message = Frame.GameEntry.GetComponent<MessageComponent>();
             Init().Forget();
@@ -22,6 +22,8 @@ namespace GameDemo
         {
             await Asset.InitializeAsync();
             await Addressables.LoadSceneAsync("MainScene", UnityEngine.SceneManagement.LoadSceneMode.Additive);
+            var player = await Asset.InstantiateGoAsync("MyCube");
+            player.Result.AddComponent<PlayerController>();
         }
     }
 }

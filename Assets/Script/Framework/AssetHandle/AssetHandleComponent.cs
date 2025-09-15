@@ -167,9 +167,13 @@ namespace Frame
             return assetHandle;
         }
 
-        public async UniTask<AssetGameObjectHandle> InstantiateGoAsync(object key, Transform parent)
+        public async UniTask<AssetGameObjectHandle> InstantiateGoAsync(object key, Transform parent = null)
         {
-            var h = Addressables.InstantiateAsync(key, parent);
+            AsyncOperationHandle<GameObject> h;
+            if (parent == null)
+                h = Addressables.InstantiateAsync(key);
+            else
+                h = Addressables.InstantiateAsync(key, parent);
             AssetGameObjectHandle assetHandle = new AssetGameObjectHandle(h, key);
             await h.Task;
             if (h.Status == AsyncOperationStatus.Succeeded)

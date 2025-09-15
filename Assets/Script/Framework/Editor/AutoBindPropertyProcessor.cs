@@ -5,6 +5,9 @@ using UnityEngine;
 
 namespace Frame.Editor
 {
+    /// <summary>
+    /// 自动绑定UI属性
+    /// </summary>
     public class AutoBindPropertyProcessor : OdinAttributeProcessor
     {
         public override void ProcessSelfAttributes(InspectorProperty property, List<Attribute> attributes)
