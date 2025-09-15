@@ -1,8 +1,9 @@
 namespace Frame
 {
-    public interface IFSM
+    /// <summary>
+    /// 有限状态机接口，状态机持有者继承该接口
+    /// </summary>
+    public interface IFSM<T> where T : class
     {
-        IStateBase curState { get; set; }
-        void HandleInput();
     }
 }

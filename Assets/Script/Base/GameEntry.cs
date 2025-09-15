@@ -22,8 +22,6 @@ namespace GameDemo
         {
             await Asset.InitializeAsync();
             await Addressables.LoadSceneAsync("MainScene", UnityEngine.SceneManagement.LoadSceneMode.Additive);
-            var player = await Asset.InstantiateGoAsync("MyCube");
-            player.Result.AddComponent<PlayerController>();
         }
     }
 }
