@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 namespace Frame
 {
     public sealed class Fsm<T> : IFsm<T> where T : class
@@ -189,11 +188,14 @@ namespace Frame
 
         public void ChangeState<TState>()
         {
-
+            ChangeState(typeof(TState));
         }
         public void ChangeState(Type stateType)
         {
-
+            FsmState<T> state = GetState(stateType);
+            m_CurrentState.OnLeave(this, false);
+            m_CurrentState = state;
+            m_CurrentState.OnEnter(this);
         }
     }
 }

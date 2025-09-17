@@ -11,7 +11,7 @@ using System.Collections.Generic;
 namespace Frame
 {
     /// <summary>
-    /// 有限状态机接口
+    /// 有限状态机接口, 提供状态机的基本功能
     /// </summary>
     /// <typeparam name="T">状态机持有者类型</typeparam>
     public interface IFsm<T> where T : class

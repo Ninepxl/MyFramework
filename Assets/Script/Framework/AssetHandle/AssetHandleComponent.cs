@@ -73,7 +73,7 @@ namespace Frame
             AssetHandle<T> assetHandle = new AssetHandle<T>(h, key);
             h.Completed += handle =>
             {
-                if (h.Status == AsyncOperationStatus.Succeeded)
+                if (handle.Status == AsyncOperationStatus.Succeeded)
                 {
                     assetHandle.Success = true;
                     assetHandle.Result = handle.Result;
@@ -150,7 +150,7 @@ namespace Frame
             h.Completed += handle =>
             {
                 // 如果加载成功
-                if (h.Status == AsyncOperationStatus.Succeeded)
+                if (handle.Status == AsyncOperationStatus.Succeeded)
                 {
                     assetHandle.Success = true;
                     assetHandle.Result = handle.Result;
@@ -259,6 +259,26 @@ namespace Frame
             }
 
             Addressables.Release(initializeHandle);
+        }
+        public void Initialize(Action handler)
+        {
+            Debug.Log("Addressables 初始化中...");
+            AsyncOperationHandle initializeHandle = Addressables.InitializeAsync(false);
+            // initializeHandle.Completed += handler;
+            initializeHandle.Completed += initHandle =>
+            {
+                if (initHandle.Status == AsyncOperationStatus.Succeeded)
+                {
+                    Debug.Log("Addressables 初始化 成功");
+                }
+                else
+                {
+                    Debug.LogError($"Addressables 初始化 失败 {initHandle.OperationException}");
+                }
+
+                Addressables.Release(initHandle);
+                handler.Invoke(); 
+            };
         }
     }
 }
