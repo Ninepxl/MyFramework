@@ -1,8 +1,13 @@
 using System;
 using System.Threading;
+using UnityEngine;
 
 namespace Frame
 {
+    /// <summary>
+    /// 侵入式链表中的指针
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class MessageHandlerNode<T> : IDisposable
     {
         public MessageHandlerList<T> Parent = default!;
@@ -25,6 +30,8 @@ namespace Frame
             DisposeCore();
         }
         public virtual void DisposeCore()
-        { }
+        {
+            Debug.Log($"取消订阅: {typeof(T)}");
+        }
     }
 }

@@ -49,13 +49,12 @@ namespace Frame
             {
                 if (isDisposed) return;
                 if (node.Parent != this) return;
-                // 怎么判断一个node是否在链表中呢
                 if (root == node)
                 {
                     // 当前链表只有一个节点
                     if (node.PreviousNode == null || node.NextNode == null)
                     {
-                        root = null;
+                       root = null;
                     }
                     else
                     {

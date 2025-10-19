@@ -17,6 +17,7 @@ namespace Frame
         private FsmState<T> m_CurrentState;
         private bool m_IsDestroyed;
         private string m_Name;
+
         /// <summary>
         /// 初始化有限状态机的新实例。
         /// </summary>

@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine.Scripting;
-
+using Unity.Collections.LowLevel.Unsafe;
 namespace Frame
 {
     [Preserve]
@@ -27,7 +27,7 @@ namespace Frame
                 {
                     // 如果有新的节点在Publish时加入就先不执行
                     if (node.Version > version) break;
-                    ((MessageHandler<T>)node).Handle(message);
+                    UnsafeUtility.As<MessageHandlerNode<T>, MessageHandler<T>>(ref node)!.Handle(message);
                     node = node.NextNode;
                 }
             }

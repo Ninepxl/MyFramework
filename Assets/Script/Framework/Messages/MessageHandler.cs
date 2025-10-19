@@ -1,7 +1,12 @@
 using System.Runtime.CompilerServices;
+using UnityEngine;
 
 namespace Frame
 {
+    /// <summary>
+    /// 消息节点
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public abstract class MessageHandler<T> : MessageHandlerNode<T>
     {
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -10,6 +15,8 @@ namespace Frame
             HandleCore(message);
         }
 
-        protected virtual void HandleCore(T message) { }
+        protected virtual void HandleCore(T message)
+        {
+        }
     }
 }
