@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Frame
+namespace HachiFramework
 {
     public class MessageComponent : GameComponent
     {

@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-namespace Frame.Editor
+namespace HachiFramework
 {
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
     public class FindUIComponentAttribute : Attribute 

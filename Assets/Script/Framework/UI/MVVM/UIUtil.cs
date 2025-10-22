@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine.Events;
-namespace Frame
+namespace HachiFramework
 {
     public static class UIUtil
     {

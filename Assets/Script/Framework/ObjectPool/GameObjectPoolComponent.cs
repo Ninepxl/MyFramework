@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     public class GameObjectPoolComponent : GameComponent
     {

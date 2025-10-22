@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     /// <summary>
     /// 消息节点

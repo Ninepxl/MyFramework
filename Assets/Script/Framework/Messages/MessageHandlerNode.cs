@@ -2,7 +2,7 @@ using System;
 using System.Threading;
 using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     /// <summary>
     /// 侵入式链表中的指针

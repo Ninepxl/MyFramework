@@ -1,6 +1,6 @@
 using System;
 
-namespace Frame
+namespace HachiFramework
 {
     public sealed class AnonymousMessageHandler<T> : MessageHandler<T>
     {

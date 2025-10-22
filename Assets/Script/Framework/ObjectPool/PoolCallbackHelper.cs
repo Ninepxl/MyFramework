@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     public static class PoolCallbackHelper
     {

@@ -1,7 +1,9 @@
 using System;
-using Frame;
 
-public interface IMessageSubscriber<T>  
+namespace HachiFramework
 {
-    IDisposable Subscribe(MessageHandler<T> handler);
+    public interface IMessageSubscriber<T>
+    {
+        IDisposable Subscribe(MessageHandler<T> handler);
+    }
 }

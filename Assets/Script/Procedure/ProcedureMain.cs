@@ -1,5 +1,5 @@
-using Frame;
 using UnityEngine;
+using HachiFramework;
 namespace ActGame
 {
     public class ProcedureMain : FsmState<ProcedureComponent>

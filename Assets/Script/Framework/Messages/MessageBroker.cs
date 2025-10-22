@@ -2,7 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using UnityEngine.Scripting;
 using Unity.Collections.LowLevel.Unsafe;
-namespace Frame
+namespace HachiFramework
 {
     [Preserve]
     public class MessageBroker<T> : IMessageSubscriber<T>, IMessagePublisher<T>, IDisposable

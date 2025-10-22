@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
-namespace Frame
+namespace HachiFramework
 {
     /// <summary>
     /// AssetHandleComponent 组件相当于AssetHandle的管理器，

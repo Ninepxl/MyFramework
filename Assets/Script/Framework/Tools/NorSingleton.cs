@@ -1,7 +1,6 @@
 // 泛型单例
 using System;
-using System.Collections.Generic;
-namespace Frame
+namespace HachiFramework
 {
     public class NorSingleton<T> where T : new()
     {

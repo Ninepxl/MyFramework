@@ -1,6 +1,6 @@
 using System;
 
-namespace Frame
+namespace HachiFramework
 {
     public interface IBindableProperty
     {

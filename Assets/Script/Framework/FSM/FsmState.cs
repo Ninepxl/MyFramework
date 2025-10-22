@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Frame 
+namespace HachiFramework 
 {
     /// <summary>
     /// 有限状态机状态基类。

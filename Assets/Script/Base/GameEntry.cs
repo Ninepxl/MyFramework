@@ -1,4 +1,4 @@
-using Frame;
+using HachiFramework;
 using UnityEngine;
 namespace ActGame
 {
@@ -10,10 +10,10 @@ namespace ActGame
         public static ProcedureComponent procedureManager;
         private void Start()
         {
-            Asset = Frame.GameEntry.GetComponent<AssetHandleComponent>();
-            GameObjectPool = Frame.GameEntry.GetComponent<GameObjectPoolComponent>();
-            Message = Frame.GameEntry.GetComponent<MessageComponent>();
-            procedureManager = Frame.GameEntry.GetComponent<ProcedureComponent>();
+            Asset = HachiFramework.GameEntry.GetComponent<AssetHandleComponent>();
+            GameObjectPool = HachiFramework.GameEntry.GetComponent<GameObjectPoolComponent>();
+            Message = HachiFramework.GameEntry.GetComponent<MessageComponent>();
+            procedureManager = HachiFramework.GameEntry.GetComponent<ProcedureComponent>();
         }
 
     }

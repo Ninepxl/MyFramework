@@ -1,4 +1,4 @@
-namespace Frame
+namespace HachiFramework
 {
     public interface IMessagePublisher<T>
     {

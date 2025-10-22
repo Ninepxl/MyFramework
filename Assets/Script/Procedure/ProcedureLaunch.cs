@@ -1,8 +1,7 @@
 using Cysharp.Threading.Tasks;
-using Frame;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
-
+using HachiFramework;
 namespace ActGame
 {
     public class ProcedureLaunch : FsmState<ProcedureComponent>
@@ -10,6 +9,7 @@ namespace ActGame
         public override void OnInit(IFsm<ProcedureComponent> fsm)
         {
             base.OnInit(fsm);
+            Application.targetFrameRate = 120;
         }
 
         public override void OnEnter(IFsm<ProcedureComponent> fsm)

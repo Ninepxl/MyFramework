@@ -8,7 +8,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Frame
+namespace HachiFramework
 {
     /// <summary>
     /// 有限状态机接口, 提供状态机的基本功能

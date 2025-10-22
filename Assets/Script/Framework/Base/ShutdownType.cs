@@ -1,4 +1,4 @@
-﻿namespace Frame
+﻿namespace HachiFramework
 {
     public enum ShutdownType
     {

@@ -1,9 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Frame.Editor;
-using Frame;
-using UnityEngine.Events;
 using System;
+using HachiFramework;
 namespace UITEST
 {
     /// <summary>

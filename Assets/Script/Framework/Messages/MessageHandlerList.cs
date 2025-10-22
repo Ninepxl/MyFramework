@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.CompilerServices;
 
-namespace Frame
+namespace HachiFramework
 {
     public class MessageHandlerList<T> : IDisposable
     {

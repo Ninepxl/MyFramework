@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     public class GameComponent : MonoBehaviour
     {

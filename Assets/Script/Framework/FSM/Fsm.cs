@@ -7,7 +7,7 @@
 
 using System;
 using System.Collections.Generic;
-namespace Frame
+namespace HachiFramework
 {
     public sealed class Fsm<T> : IFsm<T> where T : class
     {

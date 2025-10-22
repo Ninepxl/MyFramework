@@ -1,6 +1,8 @@
+using System;
 using UnityEngine;
 namespace ActGame
 {
+    [Serializable]
     public enum InventoryType
     {
         Props,

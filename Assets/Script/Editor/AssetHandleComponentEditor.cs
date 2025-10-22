@@ -1,15 +1,16 @@
-using System.Collections.Generic;
-using System.Linq;
-using Sirenix.OdinInspector;
 using Sirenix.OdinInspector.Editor;
 using UnityEditor;
 using UnityEngine;
-
+using HachiFramework;
+/*
+使用Odin 开发的显示面板后续讲使用原生的IMGUI和UIToolkit进行代替
+*/
 namespace Frame
 {
     [CustomEditor(typeof(AssetHandleComponent))]
     public class AssetHandleComponentEditor : OdinEditor
     {
+        [SerializeField]
         private AssetHandleComponent target_component;
 
         protected override void OnEnable()

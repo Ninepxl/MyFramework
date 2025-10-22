@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
+using Sirenix.Serialization;
 using UnityEngine;
 
 namespace ActGame
 {
-    [CreateAssetMenu(fileName = "ItemConfig", menuName = "SO/Inventory/ItemConfig", order = 0)]
+    [Serializable]
     public class ItemSo : ScriptableObject
     {
         public InventoryType type;
@@ -13,6 +15,7 @@ namespace ActGame
     [CreateAssetMenu(fileName = "ItemList", menuName = "SO/Inventory/ItemList", order = 0)]
     public class ItemConfig : ScriptableObject
     {
-        public Dictionary<int, ItemSo> items;
+        // [OdinSerialize]
+        public List< ItemSo> items = new();
     }
 }

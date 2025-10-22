@@ -1,24 +1,25 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using ActGame;
-using Sirenix.OdinInspector;
+using HachiFramework;
 public class TEST : MonoBehaviour
 {
     public List<IDisposable> messageNodes = new();
     private void OnEnable()
     {
-        var node = GameEntry.Message.Subscribe<string>((val) =>
+        var node = ActGame.GameEntry.Message.Subscribe<string>((val) =>
         {
             Debug.Log(val);
         });
         messageNodes.Add(node);
     }
-    [Button("消息系统测试")]
+
+    [HachiButton]
     public void MessageTEST()
     {
-        GameEntry.Message.Publish<string>("pxl");
+        ActGame.GameEntry.Message.Publish<string>("pxl");
     }
+
     private void OnDisable()
     {
         {

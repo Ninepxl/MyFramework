@@ -2,7 +2,7 @@ using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.AddressableAssets;
 using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     /// <summary>
     /// 加载Texture2D、AudioClip、Sprite 等资源Handle

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Frame
+namespace HachiFramework
 {
     public static class GameEntry
     {

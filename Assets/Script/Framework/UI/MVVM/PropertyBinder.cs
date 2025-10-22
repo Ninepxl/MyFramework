@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Frame
+namespace HachiFramework
 {
     public class PropertyBinder : IDisposable
     {
