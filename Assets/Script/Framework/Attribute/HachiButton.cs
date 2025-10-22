@@ -8,9 +8,5 @@ namespace HachiFramework
     {
         public string buttonName;
         public float height;
-        public HachiButton()
-        {
-            Debug.Log("Frame HachiButton");
-        }
     }
 }
